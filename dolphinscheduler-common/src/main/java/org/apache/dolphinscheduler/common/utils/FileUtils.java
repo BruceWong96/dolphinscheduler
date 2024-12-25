@@ -36,12 +36,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.nio.file.attribute.UserPrincipal;
+import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.Optional;
 import java.util.Set;
 import java.util.zip.CRC32;
@@ -270,6 +269,12 @@ public class FileUtils {
             }
 
         }
+    }
+
+    public static Path setOwner(@NonNull Path path, @NonNull String owner) throws IOException {
+        UserPrincipalLookupService lookupService = FileSystems.getDefault().getUserPrincipalLookupService();
+        UserPrincipal user = lookupService.lookupPrincipalByName(owner);
+        return Files.setOwner(path, user);
     }
 
     public static void setFileTo755(File file) throws IOException {

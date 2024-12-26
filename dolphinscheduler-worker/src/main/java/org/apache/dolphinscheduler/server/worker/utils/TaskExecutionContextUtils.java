@@ -32,7 +32,6 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -51,10 +50,8 @@ public class TaskExecutionContextUtils {
                 log.warn("The TaskInstance WorkingDirectory: {} is exist, will recreate again",
                         taskInstanceWorkingDirectory);
             }
-            FileUtils.createDirectoryWith755(Paths.get(taskInstanceWorkingDirectory));
-            final Path taskInstanceWorkingDirectoryPath = Paths.get(taskInstanceWorkingDirectory);
-            FileUtils.createDirectoryWith755(taskInstanceWorkingDirectoryPath);
-            FileUtils.setOwner(taskInstanceWorkingDirectoryPath, taskExecutionContext.getTenantCode());
+
+            FileUtils.createDirectoryWith775(Paths.get(taskInstanceWorkingDirectory));
 
             taskExecutionContext.setExecutePath(taskInstanceWorkingDirectory);
             taskExecutionContext.setAppInfoPath(FileUtils.getAppInfoPath(taskInstanceWorkingDirectory));

@@ -36,11 +36,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.nio.file.attribute.UserPrincipal;
-import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.Optional;
 import java.util.Set;
 import java.util.zip.CRC32;
@@ -62,6 +62,8 @@ public class FileUtils {
     public static final String KUBE_CONFIG_FILE = "config";
 
     private static final Set<PosixFilePermission> PERMISSION_755 = PosixFilePermissions.fromString("rwxr-xr-x");
+
+    private static final Set<PosixFilePermission> PERMISSION_775 = PosixFilePermissions.fromString("rwxrwxr-x");
 
     /**
      * get download file absolute path and name
@@ -271,12 +273,6 @@ public class FileUtils {
         }
     }
 
-    public static Path setOwner(@NonNull Path path, @NonNull String owner) throws IOException {
-        UserPrincipalLookupService lookupService = FileSystems.getDefault().getUserPrincipalLookupService();
-        UserPrincipal user = lookupService.lookupPrincipalByName(owner);
-        return Files.setOwner(path, user);
-    }
-
     public static void setFileTo755(File file) throws IOException {
         if (OSUtils.isWindows()) {
             return;
@@ -291,6 +287,29 @@ public class FileUtils {
             for (File f : files) {
                 setFileTo755(f);
             }
+        }
+    }
+
+    public static void createDirectoryWith775(@NonNull Path path) throws IOException {
+        if (path.toFile().exists()) {
+            return;
+        }
+        if (OSUtils.isWindows()) {
+            Files.createDirectories(path);
+        } else {
+            Path parent = path.getParent();
+            if (parent != null && !parent.toFile().exists()) {
+                createDirectoryWith755(parent);
+            }
+
+            try {
+                Files.createDirectory(path);
+                Files.setPosixFilePermissions(path, PERMISSION_775);
+            } catch (FileAlreadyExistsException fileAlreadyExistsException) {
+                // Catch the FileAlreadyExistsException here to avoid create the same parent directory in parallel
+                log.debug("The directory: {} already exists", path);
+            }
+
         }
     }
 

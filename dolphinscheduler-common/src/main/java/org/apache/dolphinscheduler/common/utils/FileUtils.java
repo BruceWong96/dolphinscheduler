@@ -308,7 +308,7 @@ public class FileUtils {
                 Files.setPosixFilePermissions(path, PERMISSION_775);
             } catch (FileAlreadyExistsException fileAlreadyExistsException) {
                 // Catch the FileAlreadyExistsException here to avoid create the same parent directory in parallel
-                log.debug("The directory: {} already exists", path);
+                log.error("The directory: {} already exists", path);
             }
 
         }

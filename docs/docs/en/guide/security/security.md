@@ -21,7 +21,7 @@ Administrator login, default username/password: admin/dolphinscheduler123
 
 > Note: 
 > 1. Currently, only admin users can modify tenant.
-> 2. If you create a tenant manually in the environment, you need to add the current tenant to the configured group, otherwise the tenant does not have working directory permissions.
+> 2. If you create a tenant manually in the Linux, you need to add the manually created tenant to the dolphinscheduler bootstrap user's group, so that the tenant will have enough working directory permissions.
 
 ![create-tenant](../../../../img/new_ui/dev/security/create-tenant.png)
 

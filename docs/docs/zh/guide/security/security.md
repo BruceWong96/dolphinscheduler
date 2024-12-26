@@ -20,7 +20,7 @@
 
 > 注意：
 > 1. 目前仅有 admin 用户可以修改租户；
-> 2. 如果用户手动在环境中创建租户，需要把当前租户添加到已配置的用户组下，否则该租户不具备工作目录的权限。
+> 2. 如果您在 Linux 中手动创建一个租户，则需要将手动创建的租户添加到 dolphinscheduler bootstrap 用户组，以便该租户拥有足够的工作目录权限。
 
 ![create-tenant](../../../../img/new_ui/dev/security/create-tenant.png)
 

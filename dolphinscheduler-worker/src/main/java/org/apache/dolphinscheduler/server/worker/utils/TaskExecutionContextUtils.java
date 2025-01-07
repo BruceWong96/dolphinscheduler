@@ -51,7 +51,7 @@ public class TaskExecutionContextUtils {
                         taskInstanceWorkingDirectory);
             }
 
-            FileUtils.createDirectoryWith775(Paths.get(taskInstanceWorkingDirectory));
+            FileUtils.createDirectoryWithPermission(Paths.get(taskInstanceWorkingDirectory), FileUtils.PERMISSION_775);
 
             taskExecutionContext.setExecutePath(taskInstanceWorkingDirectory);
             taskExecutionContext.setAppInfoPath(FileUtils.getAppInfoPath(taskInstanceWorkingDirectory));
